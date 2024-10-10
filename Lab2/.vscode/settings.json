@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "unistd.h": "c",
+        "__bit_reference": "c",
+        "bitset": "c",
+        "__memory": "c",
+        "limits": "c",
+        "locale": "c",
+        "ratio": "c",
+        "tuple": "c",
+        "ios": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "__locale": "c"
+    }
+}

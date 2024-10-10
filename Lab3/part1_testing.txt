@@ -1,0 +1,21 @@
+Test Case 1: No Carry, Simple Addition
+- X = 0000 Y = 00 C-in = 0
+  - Sign-extended Y = 0000
+  - Sum = 0000, Carry-out = 0
+
+Test Case 2: No Carry, Non-Zero Addition
+    - X = 0010, Y = 01, C-in = 0
+    - Sign-extended Y = 0001
+    - Sum = 0011, Carry-out = 0
+
+Test Case 3: Carry Input with Simple Addition
+- X = 0011, Y = 01, C-in = 1
+  - Sign-extended Y = 0001
+  - Sum = 0101, Carry-out = 0
+
+Test Case 4: Overflow Detection
+- X = 1111, Y = 01, C-in = 1
+  - Sign-extended Y = 0001
+  - Sum = 0001, Carry-out = 1 (overflow)
+
+
