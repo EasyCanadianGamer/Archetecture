@@ -1,23 +1,15 @@
-CC=gcc
-CXX=g++
-RM=rm -f
-CPPFLAGS=-Wall -g
-LDFLAGS=-g
-LDLIBS=
+CC = gcc
+CFLAGS = -g
 
-SRCS=sum.s prog.c
-OBJS=$(subst .c,.o,$(SRCS))
+TARGET = prog
 
-all: prog
+SRCS = proc.c sum.s
 
-prog: $(OBJS)
-	$(CC) $(LDFLAGS) -o prog $(OBJS) $(LDLIBS)
+all: $(TARGET)
 
-sum.o: sum.s
-prog.o: prog.c
+$(TARGET): $(SRCS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
+
 
 clean:
-	$(RM) $(OBJS)
-
-distclean: clean
-	$(RM) prog
+	rm -f $(TARGET)
