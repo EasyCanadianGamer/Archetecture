@@ -1,0 +1,41 @@
+Initialization:
+
+Begin the _init function by saving the current frame pointer and link register.
+Call a weak function if available and then restore the previous state before returning.
+PLT Setup:
+
+For each function in the Procedure Linkage Table (PLT), set up the stack frame.
+Load the address of the function to be called and branch to it, allowing dynamic linking of library functions like exit, __libc_start_main, and others.
+Main Execution:
+
+In the _start function, initialize stack pointers and move input arguments to appropriate registers.
+Call __libc_start_main to begin the main function of the program.
+If __libc_start_main fails, call abort.
+Global Destructor Management:
+
+Register and deregister global destructors for cleanup tasks at program termination.
+Main Function Logic:
+
+In the main function, save the current execution state and load input arguments.
+Check conditions on the arguments and call various functions (f1, f2, f3, f4) for processing.
+Each function performs operations such as loading values, manipulating data, and returning results.
+
+Explaination of the code:
+To solve the assembly code for the puzzle binary, 
+I started by breaking down the disassembly into its key sections. 
+I looked closely at the _init function, which sets up the program by saving important information and calling any weak functions that might be needed.
+
+Next, I examined the Procedure Linkage Table (PLT),
+which helps the program dynamically call functions from libraries, like exit and __libc_start_main.
+
+When I got to the main function, 
+I focused on how it handles input arguments and manages the flow of the program. 
+I traced the calls to several utility functions (f1, f2, f3, f4), each responsible for specific tasks like processing data or performing calculations.
+
+By understanding how these parts fit together—how they save information, load values, and check conditions—I was able to see the overall logic of the program.
+This approach helped me summarize the code's behavior and how it manages tasks like input and output efficiently.
+
+
+
+
+

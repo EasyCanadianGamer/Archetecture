@@ -1,13 +1,22 @@
+/* Yana Goldberg and Eyad Merajuddin
+CSC 325-02 
+October 13, 2024
+The program reads in float values from a file, sorts them, and 
+calculates some statistics about them. The statistics calculated
+are the minimum, maximum, mean, median, and standard deviation.
+The program also uses malloc to dynamically allocate arrays which
+hold the float values that are read in. When the program reads
+in more values than the array can hold, a new array is created
+which is double the size of the previous array, and the original
+array is freed.*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "readfile.h"
 #include <math.h>
+#include "readfile.h"
 
-
-float *values;
-
-
+// Retrieve the file name from the cmd line
 void get_filename_from_cmdline(int argc, char *argv[], char *filename) {
     if (argc != 2) {
         fprintf(stderr, "usage: %s filename\n", argv[0]);
@@ -18,148 +27,166 @@ void get_filename_from_cmdline(int argc, char *argv[], char *filename) {
     }
 }
 
-// Function to calculate min
-float get_min(float *values, int size) {
-    float min = values[0];
-    for (int i = 1; i < size; i++) {
-        if (values[i] < min) {
-            min = values[i];
-        }
-    }
-    return min;
-}
-
-// Function to calculate max
-float get_max(float *values, int size) {
-    float max = values[0];
-    for (int i = 1; i < size; i++) {
-        if (values[i] > max) {
-            max = values[i];
-        }
-    }
-    return max;
-}
-
-float get_mean(float *values, int size) {
-    float sum = 0;
-    for (int i = 0; i < size; i++) {
-        sum += values[i];
-    }
-    return sum / size;
-}
-
-float get_median(float *values, int size) {
-    float temp;
-    // Sorting values for median calculation
-    for (int i = 0; i < size-1; i++) {
-        for (int j = i+1; j < size; j++) {
-            if (values[i] > values[j]) {
-                temp = values[i];
-                values[i] = values[j];
-                values[j] = temp;
+// Sort function using the bubble sort algorithm.
+void bubble_sort(float *arr, int size) {
+   for (int i = 0; i < size - 1; i++) {
+       for (int j = 0; j < size - i - 1; j++) {
+           if (arr[j] > arr[j + 1]) {
+               float temp = arr[j];
+               arr[j] = arr[j + 1];
+               arr[j + 1] = temp;
+    
             }
         }
     }
-    if (size % 2 == 0) {
-        return (values[size/2 - 1] + values[size/2]) / 2;
-    } else {
-        return values[size/2];
+} 
+
+// Reallocation function which is called when the number
+// of floats in the file exceeds the capacity of the array
+float *reallocate(float *oldArray, int *capacity) {
+    float *newArray;
+
+    // Allocate space for a new array which is double the size
+    // of the original array
+    newArray = malloc(sizeof(float) * (*capacity) * 2);
+
+    // Copy all the floats from the old array to the new array
+    for (int i = 0; i < (*capacity); i++) {
+        newArray[i] = oldArray[i]; 
     }
+    
+    // Free the memory holding the old array
+    free(oldArray);
+    // Update the variably holding capacity
+    *capacity = (*capacity) * 2;
+    return newArray;
 }
 
-
-float get_std_dev(float *values, int size, float mean) {
-    float sum_sq_diff = 0;
-    for (int i = 0; i < size; i++) {
-        sum_sq_diff += (values[i] - mean) * (values[i] - mean);
-    }
-    return sqrt(sum_sq_diff / size);
-}
-
-
+// Populate the array with floats from the file being read
 float *get_values(int *size, int *capacity, char *filename) {
-    // Allocate memory for values
-    values = (float*)malloc(sizeof(float) * (*capacity));
-   
-    if (values == NULL) {
-        fprintf(stderr, "malloc failed\n");
-        exit(1);
-    }
-    printf("Memory allocated\n");
+    float *numArray;
+    float num;
+    int i = 0;
 
-    float value;
-    int num_floats;
+    *capacity = 20;
+    // Allocate space for an array of 20 floats 
+    numArray = malloc(sizeof(float) * (*capacity));
 
-    // Read the floats from the file
-    while ((num_floats = read_float(&value)) == 0) { // 0 means read successful
-        // Add the value to the array
-        values[*size] = value;
+    // While there are still floats to be read from the file,
+    // place them into the array and update the size.
+    while(read_float(&num) != 1) {
+        numArray[i] = num;
+        i++;
         (*size)++;
 
-        // Check if we need to resize the array
-        if (*size == *capacity) {
-            *capacity *= 2;
-            values = (float*)realloc(values, sizeof(float) * (*capacity));
-            if (values == NULL) {
-                fprintf(stderr, "realloc failed\n");
-                exit(1);
-            }
+        // If the size of the array is about to exceed the capacity,
+        // call the previously defined reallocation function to 
+        // allocate space for a new, larger array.
+        if (*size >= *capacity - 1) {
+            numArray = reallocate(numArray, capacity);
         }
     }
-    return values; 
+
+    return numArray;    
 }
+
+// Return the first value in the sorted array
+float minimum(float *array) {
+    return array[0];
+}
+
+// Return the last value in the sorted array
+float maximum(float* array, int size) {
+    return array[size - 1];
+}
+
+// Calculate the mean of the array
+double calcMean(float *array, int size) {
+    double sum = 0;
+    double mean = 0;
+
+    // Find the sum of all the numbers in the array
+    for (int i = 0; i < size; i++) {
+        sum = sum + array[i];
+    }
+    
+    // Divide the sum by the size of the array to find the mean
+    mean = sum / size;
+    return mean;
+}
+
+// Find the median of the array
+float findMedian(float *array, int size) {
+    float median;
+
+    // If there are an odd number of floats in the array
+    if (size % 2 == 1) {
+        median = array[(size - 1) / 2];
+    }
+    // If there are an even number of floats in the array
+    else {
+        median = array[size / 2];
+    }
+
+    return median;
+}
+
+// Calculate the standard deviation
+double stdDev(float *array, int size, double mean) {
+    double standardDev;
+    double summation = 0;
+
+    // Find the summation of the number in the ith position subtracted
+    // by the mean and all to the power of 2
+    for (int i = 0; i < size; i++) {
+        summation = summation + pow((array[i] - mean), 2);
+    }
+    
+    // Use the formula for standard deviation
+    standardDev = sqrt((1.0 / size) * summation);
+
+    return standardDev;
+}
+
 
 int main(int argc, char *argv[]) {
     char filename[255];
-    int size = 0;
-    int cap  = 4;
-
+    int arraySize = 0; 
+    int arrayCapacity = 0;
+    float *numArray;
+    double mean;
+    int unusedCapacity;
 
     // get the filename from the command line
     get_filename_from_cmdline(argc, argv, filename);
 
-
-
-    // TODO - complete the program
-
+    // Open the file
     open_file(filename);
 
-    values = get_values(&size, & cap, filename);
+    // Call the get_values function to populate the array
+    numArray = get_values(&arraySize, &arrayCapacity, filename);
 
-close_file();
+    // Sort the array using the bubble_sort function
+    bubble_sort(numArray, arraySize);
 
-// print
-   float min = get_min(values, size);
-    float max = get_max(values, size);
-    float mean = get_mean(values, size);
-    float median = get_median(values, size);
-    float std_dev = get_std_dev(values, size, mean);
+    // Calculate the mean to make the call to the stdDev function cleaner
+    mean = calcMean(numArray, arraySize);
 
+    // Calculate the unused capacity left over in the array
+    unusedCapacity = arrayCapacity - arraySize;
 
-  printf("Results\n");
-    printf("-------\n");
-    printf("num values:         %d\n", size);
-    printf("       min:      %.3f\n", min);
-    printf("       max:      %.3f\n", max);
-    printf("      mean:      %.3f\n", mean);
-    printf("    median:      %.3f\n", median);
-    printf("   std dev:      %.3f\n", std_dev);
-    printf("unused array capacity: %d\n", cap - size);
+    // Print all results
+    printf("Results: \n-------\nnum values: %d\n", arraySize);
+    printf("%10s: %.3f\n", "min", minimum(numArray));
+    printf("%10s: %.3f\n", "max", maximum(numArray, arraySize));
+    printf("%10s: %.3f\n", "mean", mean);
+    printf("%10s: %.3f\n", "median", findMedian(numArray, arraySize));
+    printf("%10s: %.3f\n", "std dev", stdDev(numArray, arraySize, mean));
+    printf("unused array capacity: %d\n", unusedCapacity);
 
-
-
-
-   
-
-
-
-    
-
-    
-free( values);
-
-
-    
+    // Free the array and close the file
+    free(numArray);
+    close_file();
 
     return 0;
 }

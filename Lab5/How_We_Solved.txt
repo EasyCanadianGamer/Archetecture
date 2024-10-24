@@ -1,0 +1,62 @@
+Patrick Schaeffer and Eyad Merajuddin
+Group 21
+
+./puzzle 21
+
+When a function is called the stack pointer grows, then the base pointer and link register are saved
+
+The function f1 takes the input of an integer num, the value is saved into 2 other integers check and sum.
+Check function is used to determine if num is even or odd, for our case 21 it was odd.
+A loop is then utilized to sum our number with all the numbers between 5 and 11, our case is 77.
+The sum is returned.
+
+The main function first checks the size of the input to see if argc is 2. The if statement makes sure the program was called
+correctly. In our case it was. Next int groupNum is created and sscanf is called storing the value in groupNum, our value is 21.
+An if statement checks if groupNum executed correctly and the value was stored in groupNum. For us it was.
+Next the program uses ifs makes sure groupNum is between 0 and 23 or 0x17. For us it is. Then integer low is created and 
+valued at our groupNum minus 1, for us 20. If this number is greater than 22 we'll be sent away with goto, we are not.
+A different goto is calculated using low and udf values to determine a line. f1 is called using groupNum, it returns 77. Lastly
+another goto brings us to the end and main returns 0, because it was successful.
+
+C Code:
+
+int f1(int num){
+	int check = num;
+	int sum = num;
+	//check if number is odd
+	if (check & 1) == 0 {goto <f1+88>;}	//is not
+	int count = 5;
+	goto <f1+72>;
+	
+	if (count <= 11) {goto <f1+44>}	//is
+
+	for (count = 5; count <= 11; count++){
+		sum += count;
+	}
+	//ends with count = 12 and sum = 77
+	goto <f1+140>;
+
+	return sum;	//returns 77
+}
+
+int main(int argc, char** argv){
+	If argc == 2 {goto <main + 76>;}	//is
+
+	int groupNum;			//21 or 0x15
+	int good = sscanf(argv[1], "%d", groupNum);
+	if (good) {goto <main 168>;}	//is
+
+	if (groupNum <= 0) {goto <main + 192>;}	//is not
+	if (groupNum <= 0x17) {goto <main + 236>;}	//is
+
+	int low = groupNum - 1;
+	if (low > 0x16) {goto <main + 644>;}	//is not
+	goto <main + 596>; //0xaaaaaaaa0000 + low + 0xaaaaaaaa0c08
+
+	int val = f1(groupNum);	//val = 77
+	goto <main + 684>;
+
+	return 0;
+}
+
+	
