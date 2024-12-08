@@ -1,0 +1,17 @@
+The two accounts begin with $1000 each, so the total of the initial balances is
+$2000. Run the program, which makes one million random transfers
+between the two accounts. Is the total of the final balances still $200, or is it
+now greater or less? Why?
+
+- The total of the final balances is not $2000, its $194456 which is way more then
+$2000, because when the program ran and did the random one million transfers, it 
+didn't stop when an account hit 0 in the balance, instead it kept going into the negative
+which it shouldn't.
+
+
+Run the program several times. Do the total of the final balances change?
+Why?
+
+- The total of the final balances does changes alot, its either a very low negative number or a very high positive number, because when the program ran and did the random one million transfers, it 
+didn't stop when an account hit 0 in the balance, instead it kept going into the negative
+which it shouldn't.

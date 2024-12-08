@@ -1,0 +1,17 @@
+values  num_threads   time(secs)
+-----------------------------
+1000       1           0.095
+1000       2           0.065
+1000       4           0.048
+1000       8           0.058
+1000      16           0.054
+1000      32           0.058
+1000      64           0.056
+1000     128           0.056
+1000     256           0.058
+
+
+For this lab, I used highest_candidate = 1000 and tested various values for num_threads (1, 2, 4, 8, ..., 256). The results showed that the runtime decreases significantly as num_threads increases up to 4, 
+reaching a minimum of 0.048 seconds. Beyond 4 threads, the runtime begins to stabilize, fluctuating slightly around 0.056 seconds for 64 threads and beyond. This plateau suggests that increasing the number of threads 
+further does not significantly improve performance due to overhead from thread management and limits in hardware parallelism. The optimal number of threads for this setup was 4, as it provided the fastest runtime. Additional threads did not yield better performance, likely due to diminishing returns in splitting work across too many threads
+relative to the problem size. These results emphasize the importance of balancing thread count with system capabilities to maximize performance

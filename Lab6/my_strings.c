@@ -1,9 +1,3 @@
-/*
-    CSC 325-your_section_here
-    Lab 6 - my_strings.c
-    Name: your_name_here
-    Email: your_email_here
-*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -92,6 +86,7 @@ char *strdup(const char *s){
     for (int i = 0; i <= len; i++) { 
         new_str[i] = s[i];
     }
+
 
     return new_str;
 

@@ -1,0 +1,190 @@
+--------------------------------------------------------------------------------
+-- Metadata
+--------------------------------------------------------------------------------
+Invocation:       /usr/bin/cg_annotate cachegrind.out.2869
+Command:          ./lab7 1000 2
+Events recorded:  Ir
+Events shown:     Ir
+Event sort order: Ir
+Threshold:        0.1%
+Annotation:       on
+
+--------------------------------------------------------------------------------
+-- Summary
+--------------------------------------------------------------------------------
+Ir__________________ 
+
+127,543,035 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+-- File:function summary
+--------------------------------------------------------------------------------
+  Ir_______________________  file:function
+
+< 42,048,137 (33.0%, 33.0%)  /home/canadiangamer/lab7/lab7.c:
+  23,022,019 (18.1%)           genRandomMatrix
+  19,013,018 (14.9%)           averageMat_v2
+
+< 38,000,026 (29.8%, 62.8%)  ./stdlib/./stdlib/random.c:
+  38,000,000 (29.8%)           random
+
+< 25,941,211 (20.3%, 83.1%)  ./stdlib/./stdlib/random_r.c:
+  25,935,484 (20.3%)           random_r
+
+< 16,008,369 (12.6%, 95.7%)  ???:
+   6,000,054  (4.7%)           __aarch64_swp4_rel
+   6,000,054  (4.7%)           __aarch64_cas4_acq
+   4,008,227  (3.1%)           ???
+
+<  5,000,000  (3.9%, 99.6%)  ./stdlib/./stdlib/rand.c:rand
+
+--------------------------------------------------------------------------------
+-- Function:file summary
+--------------------------------------------------------------------------------
+  Ir_______________________  function:file
+
+> 38,000,000 (29.8%, 29.8%)  random:./stdlib/./stdlib/random.c
+
+> 25,935,484 (20.3%, 50.1%)  random_r:./stdlib/./stdlib/random_r.c
+
+> 23,022,019 (18.1%, 68.2%)  genRandomMatrix:/home/canadiangamer/lab7/lab7.c
+
+> 19,013,018 (14.9%, 83.1%)  averageMat_v2:/home/canadiangamer/lab7/lab7.c
+
+>  6,000,054  (4.7%, 87.8%)  __aarch64_swp4_rel:???
+
+>  6,000,054  (4.7%, 92.5%)  __aarch64_cas4_acq:???
+
+>  5,000,000  (3.9%, 96.4%)  rand:./stdlib/./stdlib/rand.c
+
+>  4,008,227  (3.1%, 99.6%)  ???:???
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./stdlib/./stdlib/rand.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./stdlib/./stdlib/rand.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./stdlib/./stdlib/random.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./stdlib/./stdlib/random.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./stdlib/./stdlib/random_r.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./stdlib/./stdlib/random_r.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /home/canadiangamer/lab7/lab7.c
+--------------------------------------------------------------------------------
+Ir________________ 
+
+-- line 5 ----------------------------------------
+         .              Email: your_email_here
+         .          */
+         .          
+         .          #include <stdio.h>
+         .          #include <stdlib.h>
+         .          #include <sys/time.h>
+         .          #include <time.h>
+         .          
+         5  (0.0%)  int **genRandomMatrix(int n, int max) {
+         .              int i, j;
+         4  (0.0%)      int **mat = malloc(n * sizeof(int *));
+         .          
+     7,006  (0.0%)      for (i = 0; i < n; i++) {
+     9,000  (0.0%)          mat[i] = malloc(n * sizeof(int));
+         .          
+ 7,006,000  (5.5%)          for (j = 0; j < n; j++) {
+16,000,000 (12.5%)              mat[i][j] = 1 + rand() % max;
+         .                  }
+         .              }
+         .          
+         1  (0.0%)      return mat;
+         3  (0.0%)  }
+         .          
+         4  (0.0%)  void free_all(int **mat, int n) {
+         .              int i;
+         .          
+     7,006  (0.0%)      for (i = 0; i < n; i++) {
+     6,000  (0.0%)          free(mat[i]);
+         .              }
+         .          
+         2  (0.0%)      free(mat);
+         3  (0.0%)  }
+         .          
+         .          float averageMat_v1(int **mat, int n) {
+         .              int i, j, total = 0;
+         .          
+         .              for (i = 0; i < n; i++) {
+         .                  for (j = 0; j < n; j++) {
+         .                      // Note indexing: [i][j]
+         .                      total += mat[i][j];
+         .                  }
+         .              }
+         .          
+         .              return (float) total / (n * n);
+         .          }
+         .          
+         3  (0.0%)  float averageMat_v2(int **mat, int n) {
+         1  (0.0%)      int i, j, total = 0;
+         .          
+     7,006  (0.0%)      for (i = 0; i < n; i++) {
+ 7,006,000  (5.5%)          for (j = 0; j < n; j++) {
+         .                      // Note indexing: [j][i]
+12,000,000  (9.4%)              total += mat[j][i];
+         .                  }
+         .              }
+         .          
+         6  (0.0%)      return (float) total / (n * n);
+         2  (0.0%)  }
+         .          
+        10  (0.0%)  int main(int argc, char** argv) {
+         .              /* Validate command line parameters. */
+         3  (0.0%)      if (argc != 3) {
+         .                  fprintf(stderr, "usage: %s <n> <v>\n", argv[0]);
+         .                  fprintf(stderr, "where <n> is the dimension of the matrix and <v> is the algorithm version (1 or 2)\n");
+         .                  return 1;
+         .              }
+         .          
+         .              /* Declare and initialize variables. */
+         .              float res;
+         .              double timer;
+         7  (0.0%)      int n = strtol(argv[1], NULL, 10);
+         7  (0.0%)      int v = strtol(argv[2], NULL, 10);
+         3  (0.0%)      srand(time(NULL));
+         .              struct timeval tstart, tend;
+         4  (0.0%)      int ** matrix = genRandomMatrix(n, 100);
+         .          
+         3  (0.0%)      gettimeofday(&tstart, NULL);
+         3  (0.0%)      if (v == 1)
+         .                  /* Time version 1. */
+         .                  res = averageMat_v1(matrix, n);
+         .              else
+         .                  /* Time version 2. */
+         4  (0.0%)          res = averageMat_v2(matrix, n);
+         .          
+         3  (0.0%)      gettimeofday(&tend, NULL);
+        16  (0.0%)      timer = tend.tv_sec - tstart.tv_sec + (tend.tv_usec - tstart.tv_usec)/1.e6;
+         6  (0.0%)      printf("average is: %.2f; time is %g\n", res, timer);
+         .          
+         .              /* Clean up. */
+         3  (0.0%)      free_all(matrix, n);
+         1  (0.0%)      return 0;
+        12  (0.0%)  
+
+--------------------------------------------------------------------------------
+-- Annotation summary
+--------------------------------------------------------------------------------
+Ir________________ 
+
+42,048,137 (33.0%)    annotated: files known & above threshold & readable, line numbers known
+         0            annotated: files known & above threshold & readable, line numbers unknown
+         0          unannotated: files known & above threshold & two or more non-identical
+68,941,237 (54.1%)  unannotated: files known & above threshold & unreadable 
+   545,292  (0.4%)  unannotated: files known & below threshold
+16,008,369 (12.6%)  unannotated: files unknown
+

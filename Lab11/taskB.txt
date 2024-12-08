@@ -1,0 +1,11 @@
+Did your mutexes work properly the first time? Why or why not?
+
+No my Mutexes did not work properly the first time beacuse while it wasn't deadlocked, I added to much protection. While I did 
+add the lock and unlock in both the deposit and withdrawal functions, I also added a lock and unlock in the tranfer function. In general what was 
+happening was that thread A was trying to resource 1 while another thread was trying to get that resource as well. 
+
+
+Describe what approach you used to prevent deadlock.
+
+So what I did to prevent deadlock was putting the lock and unlock between the critical section which was: account->balance -= amount; in both the deposit and widthdrawal functions
+By doing that and removing the uneccessary lock and unlock code in the transfer function, the final balance was kept at $2000. make
